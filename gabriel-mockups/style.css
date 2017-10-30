@@ -1,8 +1,16 @@
+body {
+    font-family: Menlo, Monaco, 'Source Code Pro', monospace;
+}
+
 aside {
 }
 
 #blog_posts {
     display: inline-block;
+    width: 80%;
+}
+
+article {
     width: 80%;
 }
 
@@ -55,4 +63,24 @@ a {
     width: 80%;
     margin-left: 10%;
     margin-bottom: 5%;
+}
+
+.post_title {
+    font-size: 1.5em;
+}
+
+.post_header sub {
+    margin-left: 10em;
+}
+
+#detail_title {
+    width: 40%;
+    margin: auto;
+    padding-bottom: 2em;
+    font-size: 1.75em;
+}
+
+#detail_body {
+    width: 60%;
+    margin: auto;
 }
