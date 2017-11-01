@@ -100,3 +100,10 @@ a {
     background-color: lightgrey;
     border-style: none;
 }
+
+#author_date {
+    width: 60%;
+    margin: auto;
+    padding-bottom: 2em;
+    font-size: 0.75em; 
+}
