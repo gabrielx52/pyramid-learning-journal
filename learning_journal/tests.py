@@ -9,14 +9,6 @@ def dummy_request():
     return DummyRequest()
 
 
-def test_list_view_returns_list_of_entries_in_dict(dummy_request):
-    """Test if entries dict is in list view."""
-    from learning_journal.views.default import list_view
-    req = dummy_request
-    response = list_view(req)
-    assert 'entries' in response
-
-
 @pytest.fixture
 def testapp():
     """Test app fixture."""
@@ -32,6 +24,14 @@ def testapp():
 
     app = main()
     return TestApp(app)
+
+
+def test_list_view_returns_list_of_entries_in_dict(dummy_request):
+    """Test if entries dict is in list view."""
+    from learning_journal.views.default import list_view
+    req = dummy_request
+    response = list_view(req)
+    assert 'entries' in response
 
 
 def test_detail_route_has_title(testapp):
@@ -50,3 +50,12 @@ def test_entry_1_body_has_entry_text(testapp):
     """Test detail page has specific text in body."""
     response = testapp.get('/journal/1')
     assert b'extra packages' in response.body
+
+
+def test_all_entries_in_data_in_request(dummy_request):
+    """Test request object has all journal entries."""
+    from learning_journal.views.default import list_view
+    from learning_journal.data.entries import ENTRIES
+    req = dummy_request
+    response = list_view(req)
+    assert response['entries'] == ENTRIES
