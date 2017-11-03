@@ -85,6 +85,20 @@ a {
     margin: auto;
 }
 
+#detail_date {
+    width: 60%;
+    margin: 2em auto;
+    font-size: 0.7em !important;
+}
+
+#edit_button {
+    margin-left: 20%;
+    border: thin black solid;
+    color: dimgrey;
+    background-color: #efefef;
+    padding: 0 0.2em;
+}
+
 #title_form {
     background-color: lightgrey;
     border-style: none;

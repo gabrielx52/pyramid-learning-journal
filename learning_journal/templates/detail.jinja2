@@ -1,13 +1,11 @@
 {% extends "layout.jinja2" %}
 {% block body %}
 <article id="blog_post_detail">
-    <h2 id="detail_title">Blog post title </h2>
+    <h2 id="detail_title">{{ entry.title }}</h2>
     <div id="detail_body">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias accusantium nesciunt quod eveniet, quas, molestias et veritatis at similique sequi doloribus ducimus, mollitia quo amet, eius nobis quibusdam impedit voluptatem?<br><br>
-
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi perspiciatis alias, voluptate repudiandae voluptas. Quia, consectetur. Error, dignissimos! Laudantium labore tempore quasi ea recusandae ducimus eius vero, quas dolores provident.<br><br>
-
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium nostrum eaque totam fuga facilis in minima eius, impedit a ullam voluptatibus aperiam maxime adipisci, nam nemo tempora fugit amet commodi?
+        {{ entry.body }}
     </div>
+    <div id="detail_date">{{ entry.creation_date }}</div>
+    <a id="edit_button" href="{{ request.route_url('edit-entry', id=entry.id) }}" "email me">edit</a>
 </article>
 {% endblock %}

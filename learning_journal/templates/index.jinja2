@@ -1,29 +1,11 @@
 {% extends "layout.jinja2" %}
 {% block body %}
 <article id="blog_posts">
+    {% for entry in entries | reverse  %}
     <div class="post_header">
-        <h2 class="post_title">Blog post title</h2>
-        <sub>plog post date</sub>
+        <a href="{{ request.route_url('post', id=entry.id) }}"><h2 class="post_title">{{ entry.title }}</h2></a>
+        <sub>{{ entry.creation_date }}</sub>
     </div>
-    <div class="post_header">
-        <h2 class="post_title">Blog post title</h2>
-        <sub>plog post date</sub>
-    </div>
-    <div class="post_header">
-        <h2 class="post_title">Blog post title</h2>
-        <sub>plog post date</sub>
-    </div>
-    <div class="post_header">
-        <h2 class="post_title">Blog post title</h2>
-        <sub>plog post date</sub>
-    </div>
-    <div class="post_header">
-        <h2 class="post_title">Blog post title</h2>
-        <sub>plog post date</sub>
-    </div>
-    <div class="post_header">
-        <h2 class="post_title">Blog post title</h2>
-        <sub>plog post date</sub>
-    </div>
+    {% endfor %}
 </article>
 {% endblock %}
