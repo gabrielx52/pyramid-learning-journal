@@ -99,6 +99,14 @@ a {
     padding: 0 0.2em;
 }
 
+#save_button {
+    margin-left: 20%;
+    border: thin black solid;
+    color: dimgrey;
+    background-color: #efefef;
+    padding: 0 0.2em;
+}
+
 #title_form {
     background-color: lightgrey;
     border-style: none;
@@ -110,6 +118,7 @@ a {
     display: block;
     width: 60%;
     margin: auto;
+    margin-bottom: 2em;
     height: 30em;
     background-color: lightgrey;
     border-style: none;
