@@ -1,8 +1,5 @@
-body {
+body, form, #body_form, #title_form, #sidebar {
     font-family: Menlo, Monaco, 'Source Code Pro', monospace;
-}
-
-aside {
 }
 
 #blog_posts {
@@ -10,8 +7,8 @@ aside {
     width: 80%;
 }
 
-article {
-    width: 80%;
+#content {
+    width:80%;
 }
 
 #sidebar {
@@ -24,7 +21,6 @@ article {
     width: 22%;
     margin: 0;
     padding: 0;
-    font-family: Menlo, Monaco, 'Source Code Pro', monospace;
 }
 
 #site_title {
@@ -59,7 +55,6 @@ a {
 }
 
 .post_header {
-    font-family: Menlo, Monaco, 'Source Code Pro', monospace;
     width: 80%;
     margin-left: 10%;
     margin-bottom: 5%;
@@ -93,25 +88,32 @@ a {
 
 #edit_button {
     margin-left: 20%;
-    border: thin black solid;
-    color: dimgrey;
-    background-color: #efefef;
     padding: 0 0.2em;
+    width: 10em;
+    height: 2em;
+}
+
+#delete_button {
+    padding: 0.334em 3em;
 }
 
 #save_button {
+    height: 2em;
     margin-left: 20%;
+    width: 10em;
+}
+#edit_button, #delete_button, #save_button {
     border: thin black solid;
     color: dimgrey;
     background-color: #efefef;
-    padding: 0 0.2em;
+    font-size: 1em;
 }
 
 #title_form {
-    background-color: lightgrey;
-    border-style: none;
-    margin-left: 20.9em;
+    margin-left: 20%;
     margin-bottom: 4em;
+    height: 2em;
+    width: 60%;
 }
 
 #body_form {
@@ -120,8 +122,12 @@ a {
     margin: auto;
     margin-bottom: 2em;
     height: 30em;
+}
+
+#body_form, #title_form {
     background-color: lightgrey;
     border-style: none;
+    font-size: 1em;
 }
 
 #author_date {

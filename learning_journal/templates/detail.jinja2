@@ -1,11 +1,12 @@
 {% extends "layout.jinja2" %}
 {% block body %}
-<article id="blog_post_detail">
+<form method="POST" id="blog_post_detail">
     <h2 id="detail_title">{{ entry.title }}</h2>
     <div id="detail_body">
         {{ entry.body }}
     </div>
     <div id="detail_date">{{ entry.creation_date }}</div>
-    <a id="edit_button" href="{{ request.route_url('edit-entry', id=entry.id) }}" "email me">edit</a>
-</article>
+    <input type="submit" id="edit_button" value="edit" />
+    <a id="delete_button" href="{{ request.route_url('delete', id=entry.id) }}">delete</a>
+</form>
 {% endblock %}
