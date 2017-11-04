@@ -8,10 +8,6 @@ from learning_journal.models.meta import Base
 from datetime import datetime
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 
-from faker import Faker
-
-Fake = Faker()
-
 
 @pytest.fixture
 def configuration(request):
@@ -189,46 +185,42 @@ def fill_the_db(testapp):
         dbsession.add_all(ENTRIES)
 
 ENTRIES = []
-for i in range(20):
+for i in range(1, 20):
     new_entry = Entry(
         title='Test Journal {}'.format(i),
-        body=Fake.sentence()
+        body='Test body'
     )
     ENTRIES.append(new_entry)
 
 
-# def test_home_route_has_table(testapp):
-#     response = testapp.get("/")
-#     assert len(response.html.find_all('table')) == 1
-#     assert len(response.html.find_all('tr')) == 1
+def test_detail_route_has_entry_data(testapp, fill_the_db):
+    """Test that an entry's detail page has data."""
+    response = testapp.get("/journal/3")
+    assert 'Test Journal 3' in response
 
 
-# def test_home_route_with_expenses_has_rows(testapp, fill_the_db):
-#     response = testapp.get("/")
-#     assert len(response.html.find_all('tr')) == 21
+def test_delete_has_deleted_data(testapp, fill_the_db):
+    """Test that delete view will delete post."""
+    response = testapp.get("/journal/3/delete")
+    assert 'Test Journal 3' not in response
 
 
-# def test_detail_route_with_expenses_shows_expense_detail(testapp, fill_the_db):
-#     response = testapp.get("/expenses/3")
-#     assert 'potato2' in response.ubody
+def test_create_view_successful_post_redirects_home(testapp):
+    """Test that a new post will redirect to home view."""
+    entry_info = {
+        "title": "Test title",
+        "body": "Test body"
+    }
+    response = testapp.post("/journal/new-entry", entry_info)
+    assert response.location == 'http://localhost/'
 
 
-# def test_create_view_successful_post_redirects_home(testapp):
-#     expense_info = {
-#         "title": "Transportation",
-#         "amount": 2.75,
-#         "due_date": '2017-11-02'
-#     }
-#     response = testapp.post("/expenses/new-expense", expense_info)
-#     assert response.location == 'http://localhost/'
-
-
-# def test_create_view_successful_post_actually_shows_home_page(testapp):
-#     expense_info = {
-#         "title": "Booze",
-#         "amount": 88.50,
-#         "due_date": '2017-11-02'
-#     }
-#     response = testapp.post("/expenses/new-expense", expense_info)
-#     next_page = response.follow()
-#     assert "Booze" in next_page.ubody
+def test_create_view_successful_post_actually_shows_home_page(testapp):
+    """Test that a new post will redirect to home view."""
+    entry_info = {
+        "title": "Sandwich",
+        "body": "Test body"
+    }
+    response = testapp.post("/journal/new-entry", entry_info)
+    next_page = response.follow()
+    assert "Sandwich" in next_page.ubody
