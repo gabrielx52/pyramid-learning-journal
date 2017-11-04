@@ -1,11 +1,14 @@
+"""Initialize the database with data."""
 import os
 import sys
 import transaction
 
+from datetime import datetime
+
 from pyramid.paster import (
     get_appsettings,
     setup_logging,
-    )
+)
 
 from pyramid.scripts.common import parse_vars
 
@@ -14,8 +17,9 @@ from ..models import (
     get_engine,
     get_session_factory,
     get_tm_session,
-    )
-from ..models import MyModel
+)
+from ..models import Entry
+from learning_journal.data.entries import ENTRIES
 
 
 def usage(argv):
@@ -26,12 +30,15 @@ def usage(argv):
 
 
 def main(argv=sys.argv):
+    """Init db and load with existing data."""
     if len(argv) < 2:
         usage(argv)
     config_uri = argv[1]
     options = parse_vars(argv[2:])
     setup_logging(config_uri)
     settings = get_appsettings(config_uri, options=options)
+    settings['sqlalchemy.url'] = 'postgres://localhost:5432/LearningJournal'
+    settings['sqlalchemy.url'] = os.environ['DATABASE_URL']
 
     engine = get_engine(settings)
     Base.metadata.create_all(engine)
@@ -41,5 +48,14 @@ def main(argv=sys.argv):
     with transaction.manager:
         dbsession = get_tm_session(session_factory, transaction.manager)
 
-        model = MyModel(name='one', value=1)
-        dbsession.add(model)
+        all_entries = []
+        for entry in ENTRIES:
+            all_entries.append(
+                Entry(
+                    title=entry['title'],
+                    body=entry['body'],
+                    creation_date=datetime.strptime(entry['creation_date'],
+                                                    '%A, %d %B, %Y, %I:%M %p')
+                )
+            )
+        dbsession.add_all(all_entries)

@@ -130,3 +130,14 @@ a {
     padding-bottom: 2em;
     font-size: 0.75em; 
 }
+
+#_404 {
+    text-align: center;
+    padding-top: 10em;
+    margin-left: -20%;
+    font-size: 1.5em;
+}
+
+.red_text {
+    color: red;
+}
