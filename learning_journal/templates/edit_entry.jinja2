@@ -1,10 +1,8 @@
 {% extends "layout.jinja2" %}
 {% block body %}
-<article id="edit_form">
-    <form action="post">
-        <input id="title_form" type="text" value="">
-        <input id="body_form" type="text" value="">
-        <a id="save_button" href="">save changes</a>
-    </form>
-</article>
+<form method="POST" id="input_form">
+        <input name="title" id="title_form" type="text" value="{{ entry.title }}">
+        <textarea name="body" id="body_form" type="text">{{ entry.body }}</textarea>
+        <input type="submit" id="save_button" value="save changes" />
+</form>
 {% endblock %}

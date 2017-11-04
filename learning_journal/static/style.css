@@ -10,8 +10,12 @@ aside {
     width: 80%;
 }
 
-article {
-    width: 80%;
+form {
+
+}
+
+#content {
+    width:80%;
 }
 
 #sidebar {
@@ -91,12 +95,19 @@ a {
     font-size: 0.7em !important;
 }
 
+#input_form {
+    
+}
+
 #edit_button {
     margin-left: 20%;
     border: thin black solid;
     color: dimgrey;
     background-color: #efefef;
     padding: 0 0.2em;
+    width: 10em;
+    height: 2em;
+    font-size: 1em;
 }
 
 #save_button {
@@ -105,16 +116,25 @@ a {
     color: dimgrey;
     background-color: #efefef;
     padding: 0 0.2em;
+    width: 10em;
+    height: 2em;
+    font-size: 1em;
+    font-family: Menlo, Monaco, 'Source Code Pro', monospace;
 }
 
 #title_form {
+    font-size: 1em;
     background-color: lightgrey;
     border-style: none;
-    margin-left: 20.9em;
+    margin-left: 20%;
     margin-bottom: 4em;
+    height: 2em;
+    width: 60%;
+    font-family: Menlo, Monaco, 'Source Code Pro', monospace;
 }
 
 #body_form {
+    font-size: 1em;
     display: block;
     width: 60%;
     margin: auto;
@@ -122,6 +142,7 @@ a {
     height: 30em;
     background-color: lightgrey;
     border-style: none;
+    font-family: Menlo, Monaco, 'Source Code Pro', monospace;
 }
 
 #author_date {
