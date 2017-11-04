@@ -24,5 +24,5 @@ class Entry(Base):
         return {'id': self.id,
                 'title': self.title,
                 'body': self.body,
-                'creation_date': self.creation_date.strftime('%A, %d %B, %Y, %I:%m %p')
+                'creation_date': self.creation_date.strftime('%A, %d %B, %Y, %I:%M %p')
                 }

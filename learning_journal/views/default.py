@@ -1,7 +1,7 @@
 """View serve functions."""
-from learning_journal.data.entries import ENTRIES
-from learning_journal.models.mymodel import Entry
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPNotFound
+from learning_journal.models.mymodel import Entry
 
 
 @view_config(route_name="home", renderer="templates/index.jinja2")
@@ -18,13 +18,12 @@ def list_view(request):
 def detail_view(request):
     """Serve detail page for single entry."""
     post_id = int(request.matchdict['id'])
-    # for entry in ENTRIES:
-    #     if entry['id'] == post_id:
-    #         return{'entry': entry}
     entry = request.dbsession.query(Entry).get(post_id)
-    return {
-        'entry': entry.to_dict()
-    }
+    if entry:
+        return {
+            'entry': entry.to_dict()
+        }
+    raise HTTPNotFound
 
 
 @view_config(route_name="new-entry", renderer="templates/new_entry.jinja2")
