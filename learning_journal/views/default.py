@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest, HTTPFound
+from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 from learning_journal.models.mymodel import Entry
 
 
@@ -21,21 +21,29 @@ def detail_view(request):
     """Serve detail page for single entry."""
     post_id = int(request.matchdict['id'])
     entry = request.dbsession.query(Entry).get(post_id)
-    if entry:
+    if not entry:
+        raise HTTPNotFound
+    if request.method == "GET":
         return {
             'entry': entry.to_dict()
         }
-    raise HTTPNotFound
+    if request.method == "POST":
+        return HTTPFound(request.route_url('edit-entry', id=post_id))
 
 
 @view_config(route_name="new-entry", renderer="templates/new_entry.jinja2")
 def create_view(request):
     """Serve the create a new entry page."""
     if request.method == "GET":
-        return{}
+        return{
+            'textarea': 'new entry'
+        }
     if request.method == "POST":
-        if not all([field in request.POST for field in ['title', 'body']]):
-            raise HTTPBadRequest
+        if len(request.POST['title']) == 0 or len(request.POST['body']) == 0:
+            return {
+                'textarea': 'Title and body requried.'
+            }
+        print(request.POST)
         new_entry = Entry(
             title=request.POST['title'],
             body=request.POST['body'],
@@ -63,3 +71,15 @@ def update_view(request):
         request.dbsession.add(entry)
         request.dbsession.flush()
         return HTTPFound(request.route_url('post', id=entry.id))
+
+
+@view_config(route_name="delete")
+def delete_view(request):
+    """Delete journal entry."""
+    entry_id = int(request.matchdict['id'])
+    entry = request.dbsession.query(Entry).get(entry_id)
+    print(entry)
+    if not entry:
+        raise HTTPNotFound
+    request.dbsession.delete(entry)
+    return HTTPFound(request.route_url('home'))

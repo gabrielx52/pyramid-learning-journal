@@ -2,7 +2,7 @@
 {% block body %}
 <form method="POST" id="input_form">
     <input id="title_form" type="text" placeholder="title" name="title" />
-    <textarea id="body_form" type="text" placeholder="new entry" name="body"></textarea>
-    <input type="submit" id="save_button" value="new entry"/>
+    <textarea id="body_form" type="text" placeholder="{{ textarea }}" name="body"></textarea>
+    <input type="submit" id="save_button" value="new entry" />
 </form>
 {% endblock %}
