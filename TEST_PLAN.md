@@ -17,3 +17,6 @@
 
 ## Delete view tests
 + Deleted post should be removed from db
+
+### Step4 coverage: 83% 
+We never went over how to test an update. I tried for a while to make some but I honestly have no idea how to do it.
