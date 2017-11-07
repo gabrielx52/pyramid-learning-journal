@@ -36,4 +36,4 @@ A simple Pyramid daily learning journal app.
 $ py.test learning_journal
 ```
 
-[Learning Journal Heroku Site] (https://howling-mansion-37806.herokuapp.com/)
+[Learning Journal Heroku Site](https://howling-mansion-37806.herokuapp.com/)
