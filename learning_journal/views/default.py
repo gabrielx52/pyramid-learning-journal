@@ -3,6 +3,9 @@ from datetime import datetime
 
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
+from pyramid.security import remember, forget, NO_PERMISSION_REQUIRED
+from learning_journal.security import is_authenticated
+
 from learning_journal.models.mymodel import Entry
 
 
@@ -31,7 +34,9 @@ def detail_view(request):
         return HTTPFound(request.route_url('edit-entry', id=post_id))
 
 
-@view_config(route_name="new-entry", renderer="templates/new_entry.jinja2")
+@view_config(route_name="new-entry",
+             renderer="templates/new_entry.jinja2",
+             permission="secret")
 def create_view(request):
     """Serve the create a new entry page."""
     if request.method == "GET":
@@ -53,7 +58,9 @@ def create_view(request):
         return HTTPFound(request.route_url('home'))
 
 
-@view_config(route_name="edit-entry", renderer="templates/edit_entry.jinja2")
+@view_config(route_name="edit-entry",
+             renderer="templates/edit_entry.jinja2",
+             permission="secret")
 def update_view(request):
     """Serve the edit an entry page."""
     entry_id = int(request.matchdict['id'])
@@ -73,13 +80,43 @@ def update_view(request):
         return HTTPFound(request.route_url('post', id=entry.id))
 
 
-@view_config(route_name="delete")
+@view_config(route_name="delete",
+             permission="secret")
 def delete_view(request):
     """Delete journal entry."""
     entry_id = int(request.matchdict['id'])
     entry = request.dbsession.query(Entry).get(entry_id)
-    print(entry)
     if not entry:
         raise HTTPNotFound
     request.dbsession.delete(entry)
     return HTTPFound(request.route_url('home'))
+
+
+@view_config(
+    route_name='login',
+    renderer="learning_journal:templates/login.jinja2",
+    permission=NO_PERMISSION_REQUIRED
+)
+def login(request):
+    """Login view."""
+    if request.authenticated_userid:
+        return HTTPFound(request.route_url('home'))
+    if request.method == "GET":
+        return {}
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        if is_authenticated(username, password):
+            headers = remember(request, username)
+            return HTTPFound(request.route_url('home'), headers=headers)
+
+        return {
+            'error': 'Incorrect username/password combination.'
+        }
+
+
+@view_config(route_name='logout')
+def logout(request):
+    """Logout route."""
+    headers = forget(request)
+    return HTTPFound(request.route_url('home'), headers=headers)

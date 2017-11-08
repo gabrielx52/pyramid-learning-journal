@@ -17,7 +17,12 @@
             </div>
             <aside id="sidebar">
                 <a href="/" id="site_title"><h1> &nbsp;>>> smells_like_snakes()</h1></a>
-                <a href="{{ request.route_url('new-entry') }}"><h4>new.post()</h4></a>
+                {% if request.authenticated_userid %}
+                    <a href="{{ request.route_url('new-entry') }}"><h4>new.post()</h4></a>
+                    <a href="{{ request.route_url('logout') }}"><h4>Log Out</h4></a>
+                    {% else %}
+                        <a href="{{ request.route_url('login') }}"><h4>Log In</h4></a>
+                {% endif %}
                 <h4>recent.posts</h4>
                 <div id="post_links" class="">
                     <a href="x">blog post</a><b>

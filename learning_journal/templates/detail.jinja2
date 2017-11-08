@@ -6,7 +6,9 @@
         {{ entry.body }}
     </div>
     <div id="detail_date">{{ entry.creation_date }}</div>
-    <input type="submit" id="edit_button" value="edit" />
-    <a id="delete_button" href="{{ request.route_url('delete', id=entry.id) }}">delete</a>
+    {% if request.authenticated_userid %}
+        <input type="submit" id="edit_button" value="edit" />
+        <a id="delete_button" href="{{ request.route_url('delete', id=entry.id) }}">delete</a>
+    {% endif %}
 </form>
 {% endblock %}
