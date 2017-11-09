@@ -1,5 +1,6 @@
 """Learning journal init."""
 import os
+
 from pyramid.config import Configurator
 
 

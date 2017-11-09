@@ -1,10 +1,11 @@
 """Security autorization for learning journal app."""
 import os
+
+from passlib.apps import custom_app_context as pwd_context
+
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.security import Authenticated
-from pyramid.security import Allow
-from passlib.apps import custom_app_context as pwd_context
+from pyramid.security import Allow, Authenticated
 from pyramid.session import SignedCookieSessionFactory
 
 

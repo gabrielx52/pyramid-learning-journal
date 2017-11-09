@@ -1,9 +1,11 @@
 """Tests for learning journal."""
-import pytest
+from datetime import datetime
 
 from learning_journal.models import Entry
-from datetime import datetime
-from pyramid.httpexceptions import HTTPNotFound, HTTPFound
+
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+
+import pytest
 
 
 def test_list_view_returns_list_of_entries_in_dict(dummy_request):

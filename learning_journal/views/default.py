@@ -1,12 +1,12 @@
 """View serve functions."""
 from datetime import datetime
 
-from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPNotFound, HTTPFound
-from pyramid.security import remember, forget, NO_PERMISSION_REQUIRED
+from learning_journal.models.mymodel import Entry
 from learning_journal.security import is_authenticated
 
-from learning_journal.models.mymodel import Entry
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from pyramid.security import NO_PERMISSION_REQUIRED, forget, remember
+from pyramid.view import view_config
 
 
 @view_config(route_name="home", renderer="templates/index.jinja2")

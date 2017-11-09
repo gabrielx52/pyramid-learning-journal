@@ -1,10 +1,12 @@
 """Tests fixtures for learning journal."""
-import pytest
-import transaction
-
-from pyramid import testing
 from learning_journal.models import Entry, get_tm_session
 from learning_journal.models.meta import Base
+
+from pyramid import testing
+
+import pytest
+
+import transaction
 
 
 @pytest.fixture
@@ -107,6 +109,7 @@ def testapp_secure(request):
     request.addfinalizer(tearDown)
 
     return TestApp(app)
+
 
 @pytest.fixture(scope="session")
 def fill_the_db(testapp):
