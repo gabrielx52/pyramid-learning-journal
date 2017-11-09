@@ -1,50 +1,11 @@
 """Tests for learning journal."""
-import pytest
-import transaction
-
-from pyramid import testing
-from learning_journal.models import Entry, get_tm_session
-from learning_journal.models.meta import Base
 from datetime import datetime
-from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 
+from learning_journal.models import Entry
 
-@pytest.fixture
-def configuration(request):
-    """Set up a Configurator instance."""
-    config = testing.setUp(settings={
-        'sqlalchemy.url': 'postgres://localhost:5432/LearningJournal'
-    })
-    config.include("learning_journal.models")
-    config.include("learning_journal.routes")
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 
-    def teardown():
-        testing.tearDown()
-
-    request.addfinalizer(teardown)
-    return config
-
-
-@pytest.fixture
-def db_session(configuration, request):
-    """Create a database session."""
-    session_factory = configuration.registry["dbsession_factory"]
-    session = session_factory()
-    engine = session.bind
-    Base.metadata.create_all(engine)
-
-    def teardown():
-        session.transaction.rollback()
-        Base.metadata.drop_all(engine)
-
-    request.addfinalizer(teardown)
-    return session
-
-
-@pytest.fixture
-def dummy_request(db_session):
-    """Fake HTTP Request."""
-    return testing.DummyRequest(dbsession=db_session)
+import pytest
 
 
 def test_list_view_returns_list_of_entries_in_dict(dummy_request):
@@ -145,54 +106,6 @@ def test_create_view_incomplete_data_placeholder_text(dummy_request):
     assert response == {'textarea': 'Title and body requried.'}
 
 
-@pytest.fixture(scope="session")
-def testapp(request):
-    """Test app for learning journal tests."""
-    from webtest import TestApp
-    from pyramid.config import Configurator
-
-    def main():
-        settings = {
-            'sqlalchemy.url': 'postgres://localhost:5432/LearningJournal'
-        }
-        config = Configurator(settings=settings)
-        config.include('pyramid_jinja2')
-        config.include('learning_journal.routes')
-        config.include('learning_journal.models')
-        config.scan()
-        return config.make_wsgi_app()
-
-    app = main()
-
-    session_factory = app.registry["dbsession_factory"]
-    engine = session_factory().bind
-    Base.metadata.create_all(bind=engine)
-
-    def tearDown():
-        Base.metadata.drop_all(bind=engine)
-
-    request.addfinalizer(tearDown)
-
-    return TestApp(app)
-
-
-@pytest.fixture(scope="session")
-def fill_the_db(testapp):
-    """Fill the db for the testapp."""
-    session_factory = testapp.app.registry["dbsession_factory"]
-    with transaction.manager:
-        dbsession = get_tm_session(session_factory, transaction.manager)
-        dbsession.add_all(ENTRIES)
-
-ENTRIES = []
-for i in range(1, 20):
-    new_entry = Entry(
-        title='Test Journal {}'.format(i),
-        body='Test body'
-    )
-    ENTRIES.append(new_entry)
-
-
 def test_detail_route_has_entry_data(testapp, fill_the_db):
     """Test that an entry's detail page has data."""
     response = testapp.get("/journal/3")
@@ -224,3 +137,70 @@ def test_create_view_successful_post_actually_shows_home_page(testapp):
     response = testapp.post("/journal/new-entry", entry_info)
     next_page = response.follow()
     assert "Sandwich" in next_page.ubody
+
+
+def test_home_status_code_200_ok(testapp):
+    """Test that home route has a 200 ok status code."""
+    response = testapp.get('/')
+    assert response.status_code == 200
+
+
+def test_detail_view_status_code_200_ok(testapp, fill_the_db):
+    """Test that detail route has a 200 ok status code."""
+    response = testapp.get('/journal/1')
+    assert response.status_code == 200
+
+
+def test_non_existent_detail_view_status_code_404(testapp):
+    """Test that non-existent detail route has a 404 status code."""
+    response = testapp.get('/journal/1111', status=404)
+    assert response.status_code == 404
+
+
+def test_all_entries_in_db_are_on_main_page(testapp, fill_the_db):
+    """Test that all the entries in the database are on the main page."""
+    response = testapp.get('/')
+    html = response.html
+    entries = html.find_all('sub')
+    assert len(entries) == 20
+
+
+def test_update_view_redirects_to_detail_view(testapp, fill_the_db):
+    """Test that update view will redirect to detail view after update."""
+    entry_info = {
+        "title": "New title",
+        "body": "New body"
+    }
+    response = testapp.post("/journal/1/edit-entry", entry_info)
+    assert response.location == 'http://localhost/journal/1'
+
+
+def test_update_view_updates_entry(testapp, fill_the_db):
+    """Test that update view updates an entry."""
+    entry_info = {
+        "title": "New title",
+        "body": "New body"
+    }
+    testapp.post("/journal/1/edit-entry", entry_info)
+    response = testapp.get("/journal/1")
+    assert "New title" in response
+
+
+def test_403_error_on_new_entry_without_login(testapp_secure):
+    """Test for a 403 status code on new entry view if not logged in."""
+    assert testapp_secure.get('/journal/new-entry', status=403)
+
+
+def test_403_error_on_edit_entry_without_login(testapp_secure, fill_the_db):
+    """Test for a 403 status code on edit entry view if not logged in."""
+    assert testapp_secure.get('/journal/1/edit-entry', status=403)
+
+
+def test_200_ok_on_detail_view_without_login(testapp_secure, fill_the_db):
+    """Test for a 200 status code on detail view if not logged in."""
+    assert testapp_secure.get('/journal/1', status=200)
+
+
+def test_200_ok_on_main_view_without_login(testapp_secure):
+    """Test for a 200 status code on main view if not logged in."""
+    assert testapp_secure.get('/', status=200)
