@@ -4,6 +4,7 @@
 <p style="color: red">{{ error }}</p>
 {% endif %}
 <form method="POST" id="login_form">
+    <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}">
     <input name="username" type="text" placeholder="User Name"/ >
     <input name="password" type="password" placeholder="Password"/ >
     <input type="submit" id="login_button" value="Login" />
