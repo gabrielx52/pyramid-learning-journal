@@ -106,12 +106,6 @@ def test_create_view_incomplete_data_placeholder_text(dummy_request):
     assert response == {'textarea': 'Title and body requried.'}
 
 
-def test_detail_route_has_entry_data(testapp, fill_the_db):
-    """Test that an entry's detail page has data."""
-    response = testapp.get("/journal/3")
-    assert 'Test Journal 3' in response
-
-
 def test_delete_has_deleted_data(testapp, fill_the_db):
     """Test that delete view will delete post."""
     response = testapp.get("/journal/3/delete")
@@ -145,12 +139,6 @@ def test_home_status_code_200_ok(testapp):
     assert response.status_code == 200
 
 
-def test_detail_view_status_code_200_ok(testapp, fill_the_db):
-    """Test that detail route has a 200 ok status code."""
-    response = testapp.get('/journal/1')
-    assert response.status_code == 200
-
-
 def test_non_existent_detail_view_status_code_404(testapp):
     """Test that non-existent detail route has a 404 status code."""
     response = testapp.get('/journal/1111', status=404)
@@ -173,17 +161,6 @@ def test_update_view_redirects_to_detail_view(testapp, fill_the_db):
     }
     response = testapp.post("/journal/1/edit-entry", entry_info)
     assert response.location == 'http://localhost/journal/1'
-
-
-def test_update_view_updates_entry(testapp, fill_the_db):
-    """Test that update view updates an entry."""
-    entry_info = {
-        "title": "New title",
-        "body": "New body"
-    }
-    testapp.post("/journal/1/edit-entry", entry_info)
-    response = testapp.get("/journal/1")
-    assert "New title" in response
 
 
 def test_403_error_on_new_entry_without_login(testapp_secure):
