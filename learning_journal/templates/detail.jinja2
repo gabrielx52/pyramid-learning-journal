@@ -1,0 +1,15 @@
+{% extends "layout.jinja2" %}
+{% block body %}
+<form method="POST" id="blog_post_detail">
+    <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}">
+    <h2 id="detail_title">{{ entry.title }}</h2>
+    <div id="detail_body">
+        {{ entry.body }}
+    </div>
+    <div id="detail_date">{{ entry.creation_date }}</div>
+    {% if request.authenticated_userid %}
+        <input type="submit" id="edit_button" value="edit" />
+        <a id="delete_button" href="{{ request.route_url('delete', id=entry.id) }}">delete</a>
+    {% endif %}
+</form>
+{% endblock %}
